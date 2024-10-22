@@ -112,6 +112,7 @@ class Scalar:
         return self.history is not None and self.history.last_fn is None
 
     def is_constant(self) -> bool:
+        """Check if the value is constant"""
         return self.history is None
 
     @property
@@ -121,12 +122,14 @@ class Scalar:
         return self.history.inputs
 
     def chain_rule(self, d_output: Any) -> Iterable[Tuple[Variable, Any]]:
+        """Find the derivative of a composite function by multiplying the derivative of the outer function by the derivative of the inner function."""
         h = self.history
         assert h is not None
         assert h.last_fn is not None
         assert h.ctx is not None
 
-        raise NotImplementedError("Need to include this file from past assignment.")
+        x = h.last_fn._backward(h.ctx, d_output)
+        return list(zip(h.inputs, x))
 
     def backward(self, d_output: Optional[float] = None) -> None:
         """Calls autodiff to fill in the derivatives for the history of this object.
@@ -141,10 +144,42 @@ class Scalar:
             d_output = 1.0
         backpropagate(self, d_output)
 
-    raise NotImplementedError("Need to include this file from past assignment.")
+    def __gt__(self, b: ScalarLike) -> Scalar:
+        return LT.apply(b, self)
+
+    def __lt__(self, b: ScalarLike) -> Scalar:
+        return LT.apply(self, b)
+
+    def __eq__(self, b: ScalarLike) -> Scalar:
+        return EQ.apply(self, b)
+
+    def __sub__(self, b: ScalarLike) -> Scalar:
+        return Add.apply(self, -b)
+
+    def __neg__(self) -> Scalar:
+        return Neg.apply(self)
+
+    def __add__(self, b: ScalarLike) -> Scalar:
+        return Add.apply(self, b)
+
+    def log(self) -> Scalar:
+        """Overrides the log function and returns a Scalar"""
+        return Log.apply(self)
+
+    def exp(self) -> Scalar:
+        """Overrides the exp function and returns a Scalar"""
+        return Exp.apply(self)
+
+    def sigmoid(self) -> Scalar:
+        """Overrides the sigmoid function and returns a Scalar"""
+        return Sigmoid.apply(self)
+
+    def relu(self) -> Scalar:
+        """Overrides the rellu function and returns a Scalar"""
+        return ReLU.apply(self)
 
 
-def derivative_check(f: Any, *scalars: Scalar) -> None:
+def derivative_check(f: Any, *scalars: Scalar) -> None:  # noqa: D417
     """Checks that autodiff works on a python function.
     Asserts False if derivative is incorrect.
 

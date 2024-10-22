@@ -85,6 +85,7 @@ class Module:
         return None
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        """Overrides the forward pass."""
         return self.forward(*args, **kwargs)
 
     def __repr__(self) -> str:

@@ -5,6 +5,7 @@ from typing import List, Tuple
 
 
 def make_pts(N: int) -> List[Tuple[float, float]]:
+    """Generate N random 2D points."""
     X = []
     for i in range(N):
         x_1 = random.random()
@@ -21,6 +22,7 @@ class Graph:
 
 
 def simple(N: int) -> Graph:
+    """Create a dataset where labels are based on x_1 < 0.5."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -30,6 +32,7 @@ def simple(N: int) -> Graph:
 
 
 def diag(N: int) -> Graph:
+    """Create a dataset where labels are based on x_1 + x_2 < 0.5."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -39,6 +42,7 @@ def diag(N: int) -> Graph:
 
 
 def split(N: int) -> Graph:
+    """Create a dataset where labels are based on x_1 < 0.2 or x_1 > 0.8."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -48,6 +52,7 @@ def split(N: int) -> Graph:
 
 
 def xor(N: int) -> Graph:
+    """Create a dataset where labels follow the XOR logic between x_1 and x_2."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -57,6 +62,7 @@ def xor(N: int) -> Graph:
 
 
 def circle(N: int) -> Graph:
+    """Create a dataset where labels are based on distance from the center."""
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -67,6 +73,8 @@ def circle(N: int) -> Graph:
 
 
 def spiral(N: int) -> Graph:
+    """Create a dataset where points follow two spirals with different labels."""
+
     def x(t: float) -> float:
         return t * math.cos(t) / 20.0
 
